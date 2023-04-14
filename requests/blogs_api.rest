@@ -1,0 +1,16 @@
+@rootUrl = http://localhost:8080/api/blogs
+@protocal = HTTP/1.1
+
+###
+GET {{rootUrl}} {{protocal}}
+
+###
+POST {{rootUrl}} {{protocal}}
+Content-Type: application/json
+
+{
+  "title": "3D in CSS",
+  "author": "BRAD WOODS",
+  "url": "https://garden.bradwoods.io/notes/css/3d",
+  "likes": 0
+}

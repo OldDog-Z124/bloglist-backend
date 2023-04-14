@@ -1,0 +1,8 @@
+@rootUrl = http://localhost:8080/api/states
+@protocal = HTTP/1.1
+
+###
+GET {{rootUrl}}/clear {{protocal}}
+
+###
+GET {{rootUrl}}/initialization {{protocal}}
