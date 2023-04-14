@@ -13,4 +13,6 @@ app.use(middleware.requestLogger())
 app.use('/api/states', statesRouter)
 app.use('/api/blogs', blogsRouter)
 
+app.use(middleware.unknownEndpoint)
+
 module.exports = app
