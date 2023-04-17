@@ -1,0 +1,15 @@
+@rootUrl = http://localhost:8080/api/users
+@protocal = HTTP/1.1
+
+###
+GET {{rootUrl}} {{protocal}}
+
+###
+POST {{rootUrl}} {{protocal}}
+Content-Type: application/json
+
+{
+  "username": "xiaozhao",
+  "name": "xiaozhao",
+  "password": "123456"
+}
