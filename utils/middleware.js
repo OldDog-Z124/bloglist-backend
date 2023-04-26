@@ -27,9 +27,11 @@ function errorHandler (error, request, response, next) {
   }
 
   switch (error.name) {
+    case 'CastError':
     case 'ValidationError':
       response.status(400).json({ ...errorObject })
       break
+    case 'TokenExpiredError':
     case 'JsonWebTokenError':
       response.status(401).json({ ...errorObject, message: 'invalid token' })
       break

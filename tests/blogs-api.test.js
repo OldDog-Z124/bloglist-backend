@@ -264,10 +264,10 @@ describe(`PUT ${route}`, () => {
       .expect(200)
       .expect('Content-Type', /application\/json/)
 
-    const updatedBlog = (await Blog.findById(blog.id)).toJSON()
-    console.log(updatedBlog)
-    expect(updatedBlog).toEqual({ ...newBlog, id: blog.id, user: blog.user })
-    expect(response.body).toEqual({ ...newBlog, id: blog.id, user: blog.user.toString() })
+    const updatedBlog = (await Blog.findById(blog.id).populate('user', { username: 1, name: 1 })).toJSON()
+
+    expect(updatedBlog).toEqual({ ...newBlog, id: blog.id, user: { id: blog.user.toString(), name: loginResponse.body.name, username: loginResponse.body.username } })
+    expect(response.body).toEqual({ ...newBlog, id: blog.id, user: { id: blog.user.toString(), name: loginResponse.body.name, username: loginResponse.body.username } })
   })
 
   test('faild with status 404. if a unvalid id of blog', async () => {

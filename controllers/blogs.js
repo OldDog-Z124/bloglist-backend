@@ -24,7 +24,7 @@ blogsRouter.post('/', async (request, response) => {
   user.blogs = user.blogs.concat(savedBlog._id)
   await user.save()
 
-  response.status(201).json(savedBlog)
+  response.status(201).json(await savedBlog.populate('user', { username: 1, name: 1 }))
 })
 
 blogsRouter.delete('/:id', async (request, response) => {
@@ -37,9 +37,7 @@ blogsRouter.delete('/:id', async (request, response) => {
   }
 
   const blog = await Blog.findById(request.params.id)
-  if (!blog) {
-    return response.status(204).end()
-  }
+  if (!blog) return response.status(204).end()
 
   if (user._id.toString() !== blog.user.toString()) {
     return response.status(401).json({
@@ -53,8 +51,8 @@ blogsRouter.delete('/:id', async (request, response) => {
 })
 
 blogsRouter.put('/:id', async (request, response) => {
-  const user = request.user
-  if (!user) {
+  const loginUser = request.user
+  if (!loginUser) {
     return response.status(401).json({
       name: 'AuthorizationError',
       message: 'unauthorization operation'
@@ -64,15 +62,17 @@ blogsRouter.put('/:id', async (request, response) => {
   const blog = await Blog.findById(request.params.id)
   if (!blog) return response.status(404).end()
 
-  if (user._id.toString() !== blog.user.toString()) {
+  /*
+  if (loginUser._id.toString() !== blog.user.toString()) {
     return response.status(401).json({
       name: 'AuthorizationError',
       message: 'unauthorization operation'
     })
   }
+  */
 
-  const { title, author, url, likes } = request.body
-  const blogForUpdate = { title, author, url, likes }
+  const { title, author, url, likes, user } = request.body
+  const blogForUpdate = { title, author, url, likes, user }
 
   const returnedBlog = await Blog.findByIdAndUpdate(
     request.params.id,
@@ -80,7 +80,7 @@ blogsRouter.put('/:id', async (request, response) => {
     { new: true, runValidators: true, context: 'query' }
   )
 
-  response.json(returnedBlog)
+  response.json(await returnedBlog.populate('user', { username: 1, name: 1 }))
 })
 
 module.exports = blogsRouter
